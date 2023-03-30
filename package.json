@@ -1,0 +1,46 @@
+{
+  "name": "react-calendar-graph",
+  "version": "0.0.1",
+  "private": false,
+  "type": "module",
+  "description": "A calendar graph react-component inspired by github's contribution graph",
+  "author": "Longxiang Li",
+  "license": "MIT",
+  "readme": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/llx-00/react-calendar-graph.git"
+  },
+  "main": "./dist/bundle.js",
+  "module": "./dist/bundle.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "calendar",
+    "react",
+    "component",
+    "react-component"
+  ],
+  "scripts": {
+    "dev": "pnpm -C example run dev",
+    "dev:example": "pnpm -C example run dev",
+    "build": "tsc && vite build",
+    "preview": "npm -C example run build && npm -C example run preview"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.9",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^3.1.0",
+    "typescript": "^5.0.0",
+    "vite": "^4.2.0",
+    "vite-plugin-dts": "^2.0.0"
+  }
+}
