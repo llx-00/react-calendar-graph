@@ -24,6 +24,10 @@ export function getMouthFirstDay(year: number, month: number) {
   return +dayjs().year(year).month(month).startOf('M').format('d')
 }
 
-export function getDateByDays(year: number, days: number) {
-  return dayjs().year(year).dayOfYear(days)
+export function getDateByDays(year: number): number
+export function getDateByDays(year: number, days: number): dayjs.Dayjs
+export function getDateByDays(year: number, days?: number) {
+  return typeof(days)==='number'
+    ? dayjs().year(year).dayOfYear(days)
+    : dayjs().year(year).dayOfYear()
 }
