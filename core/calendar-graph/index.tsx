@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import { getDateByDays, dF, getMonthDays, getMouthFirstDay } from '../utils/day'
 import { useComputed } from '../utils/hooks'
@@ -120,7 +120,7 @@ export default (porps: TypePorps) => {
             <tr className="months">
               <td></td>
               {
-                (new Array(12)).map((_, idx) => (
+                (new Array(12).fill(null)).map((_, idx) => (
                   <td colSpan={getMouthColspan(porps.year, idx)}>
                     { dayjs().month(idx).format("MMM") }
                   </td>
