@@ -1,4 +1,4 @@
-import CalendarGraph from "./CalendarGraph"
+import CalendarGraph from "./calendar-graph"
 
 
 export default CalendarGraph

@@ -4,10 +4,12 @@ import './App.css'
 
 
 function App() {
+  const thisYear = new Date().getFullYear()
+
 
   return (
     <div>
-      <CalendarGraph />
+      <CalendarGraph year={thisYear} />
     </div>
   )
 }
