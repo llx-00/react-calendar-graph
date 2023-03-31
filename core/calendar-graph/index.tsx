@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
-import { getDateByDays, dF, getMonthDays, getMouthFirstDay } from '../utils/day'
+import { getDateByDays, dF, getMouthFirstDay, getMouthColspan, showWeek } from '../utils/day'
 import { classNames } from '../utils/tools'
 
 import defalutValue from './default.json'
@@ -12,10 +12,12 @@ type TypeColorKey = 0 | 1 | 2 | 3 | 4
 type TypeLevels   = 1 | 2 | 3 | 4
 
 type TypeRecord = {
+  /** The nth day of the year */
   days : number
+  /** Count of the day */
   count: number
 }
-type TypePorps = {
+type TypeProps = {
   year   : number
   isDark?: boolean
   colors?: { [key in TypeColorKey]: string }
@@ -24,29 +26,18 @@ type TypePorps = {
   /** Sort by days, need consecutive */
   records?: number[]
 
+  /** The function runs when you click the `<rd/>` element */
   recordHandle?: (record: TypeRecord) => (any)
+
+  /** When you hove `<rd/>` element, the result of running the function is displayed */
   renderTootip?: (record: TypeRecord) => string
 }
 
-function showWeek(week: string) {
-  return ['Mon', 'Wed', 'Fri'].includes(week) ? week : null
-}
 
-function getMouthColspan(year: number, month: number) {
-  const days = getMonthDays(year, month)
-  const firstDay = getMouthFirstDay(year, month)
-  return (
-    Math.ceil((days - 7 + firstDay) / 7)
-    + (month === 0 ? 1 : 0)
-    + (firstDay === 0 && month !== 0 ? 1 : 0)
-  )
-}
-
-
-export default (porps: TypePorps) => {
+export default (props: TypeProps) => {
 
   function getLevel(count: number) {
-    const levels = porps.levels || defalutValue.levels
+    const levels = props.levels || defalutValue.levels
     if (count > levels[4]) return 4
     if (count > levels[3]) return 3
     if (count > levels[2]) return 2
@@ -54,54 +45,58 @@ export default (porps: TypePorps) => {
     return 0
   }
   function getFillColor(count: number) {
-    return porps.colors
-      ? (porps.colors[getLevel(count)])
-      : defalutValue.colors[getLevel(count)][porps.isDark ? 'dark' : 'light']
+    return props.colors
+      ? (props.colors[getLevel(count)])
+      : defalutValue.colors[getLevel(count)][props.isDark ? 'dark' : 'light']
   }
   function getPaletteColors() {
     const keys: TypeColorKey[] = [0, 1, 2, 3, 4]
-    return porps.colors
-      ? keys.map(key => porps.colors![key])
-      : keys.map(key => defalutValue.colors[key][porps.isDark ? 'dark' : 'light'])
+    return props.colors
+      ? keys.map(key => props.colors![key])
+      : keys.map(key => defalutValue.colors[key][props.isDark ? 'dark' : 'light'])
   }
 
   function getMap(year: number) {
     const map = [] as TypeRecord[]
-    const monthFirstDay = getMouthFirstDay(year, 0)
-    map.push(...new Array(monthFirstDay).fill(null).map(
-      (_, idx) => ({ count: 0, days: idx - monthFirstDay })
+    const day = getMouthFirstDay(year, 0)
+
+    map.push(...new Array(day).fill(null).map(
+      (_, idx) => ({ count: 0, days: idx-day })
     ))
+
     const days = dayjs().year(year).endOf('y').dayOfYear()
     for (let i = 0; i < days; i++) map.push({
       days : i + 1,
-      count: porps.records?.[i] || 0
+      count: props.records?.[i] || 0
     })
     return map
   }
 
   function getTootipText(record: TypeRecord) {
-    return (
-      porps.renderTootip
-        ? porps.renderTootip(record)
-        : `${record.count || 'No'} contributions on ${dF(getDateByDays(porps.year, record.days))}`
-    )
+    return props.renderTootip
+      ? props.renderTootip(record)
+      : (
+        (record.count || 'No')
+        + ' contributions on '
+        + dF(getDateByDays(props.year, record.days))
+      )
   }
 
   const [dataMap, setDataMap] = useState<{
     year: number
     map : TypeRecord[]
   }>({
-    year: porps.year,
-    map : getMap(porps.year)
+    year: props.year,
+    map : getMap(props.year)
   })
   useEffect(() => {
-    if (porps.year !== dataMap.year) {
+    if (props.year !== dataMap.year) {
       setDataMap({
-        year: porps.year,
-        map: getMap(porps.year)
+        year: props.year,
+        map: getMap(props.year)
       })
     }
-  }, [porps])
+  }, [props])
 
   const sortByWeek = useMemo(() => {
     const data = new Array(7).fill(null).map(_ => ([] as TypeRecord[]))
@@ -113,7 +108,7 @@ export default (porps: TypePorps) => {
     <div
       className={classNames([
         'calendar-graph-container',
-        porps.isDark ? 'dark' : null,
+        props.isDark ? 'dark' : null,
       ])}
     >
       <table>
@@ -122,7 +117,10 @@ export default (porps: TypePorps) => {
             <td></td>
             {
               (new Array(12).fill(null)).map((_, idx) => (
-                <td key={idx} colSpan={getMouthColspan(porps.year, idx)}>
+                <td
+                  key={idx}
+                  colSpan={getMouthColspan(props.year, idx)}
+                >
                   {dayjs().month(idx).format("MMM")}
                 </td>
               ))
@@ -144,8 +142,8 @@ export default (porps: TypePorps) => {
                           title={getTootipText(record)}
                           style={{ backgroundColor: getFillColor(record.count) }}
                           onClick={() => {
-                            if (porps.recordHandle) {
-                              porps.recordHandle(record)
+                            if (props.recordHandle) {
+                              props.recordHandle(record)
                             }
                           }}
                         />
