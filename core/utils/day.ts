@@ -31,3 +31,17 @@ export function getDateByDays(year: number, days?: number) {
     ? dayjs().year(year).dayOfYear(days)
     : dayjs().year(year).dayOfYear()
 }
+
+export function showWeek(week: string) {
+  return ['Mon', 'Wed', 'Fri'].includes(week) ? week : null
+}
+
+export function getMouthColspan(year: number, month: number) {
+  const days     = getMonthDays(year, month)
+  const firstDay = getMouthFirstDay(year, month)
+  return (
+    Math.ceil((days - 7 + firstDay) / 7)
+    + (month === 0 ? 1 : 0)
+    + (firstDay === 0 && month !== 0 ? 1 : 0)
+  )
+}
