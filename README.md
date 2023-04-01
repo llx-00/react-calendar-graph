@@ -22,6 +22,12 @@ Import the component:
 import CalendarGraph from "react-calendar-graph"
 ```
 
+Import styles. You can directly import from the module, which requires a CSS loader:
+
+```ts
+import "react-calendar-graph/dist/style.css"
+```
+
 ## Props
 ```ts
 type TypeProps = {
