@@ -1,6 +1,6 @@
 # React Calendar Graph
 
-A calendar graph react-component inspired by github's contribution graph. [**Try it out on CodeSandbox**](https://codesandbox.io/p/sandbox/charming-meninsky-fhonf3).
+A calendar graph react-component inspired by github's contribution graph. [**Try it out on CodeSandbox**](https://codesandbox.io/p/sandbox/demo-react-calendar-graph-5r5uql).
 
 ![md-1](https://llx.cool/public/calendar-graph/md-1.png)
 
