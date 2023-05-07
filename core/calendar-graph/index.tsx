@@ -139,7 +139,7 @@ export default (props: TypeProps) => {
                         <td
                           key={idx}
                           className="record"
-                          title={getTootipText(record)}
+                          attr-tip={getTootipText(record)}
                           style={{ backgroundColor: getFillColor(record.count) }}
                           onClick={() => {
                             if (props.recordHandle) {
