@@ -1,40 +1,32 @@
-name: Release on version change
+name: Create Release on Tag Push
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'
 
 jobs:
-  check-package-json-and-release:
+  create-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Check package.json and create release
-        uses: marocchino/sticky-pull-request-comment@v2
+
+      - name: Create Release
         id: create_release
-        with:
-          message: "Creating new release..."
-          # repo-token: ${{ secrets.GITHUB_TOKEN }}
-          # check-commit: "/.+/"
-      - name: Create GitHub Release
-        if: steps.create_release.outputs.comment-created == 'true'
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PACKAGE_VERSION: ${{ steps.create_release.outputs.package-version }}
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          tagName=$(echo ${{ github.ref }} | sed 's/refs\/tags\/v//')
-          if [[ -z "$tagName" ]]; then
-            tagName="v${PACKAGE_VERSION}"
-            echo "Tagging $tagName..."
-            git tag $tagName -a -m "Version $tagName"
-            echo "Pushing tag to GitHub..."
-            git push origin $tagName
-          else
-            echo "Tag $tagName already exists. Skipping tag creation."
-          fi
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - blah
+            - blah
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact
+          path: /path/to/artifact
