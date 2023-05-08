@@ -18,8 +18,8 @@ jobs:
         id: create_release
         with:
           message: "Creating new release..."
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-commit: "/.+/"
+          # repo-token: ${{ secrets.GITHUB_TOKEN }}
+          # check-commit: "/.+/"
       - name: Create GitHub Release
         if: steps.create_release.outputs.comment-created == 'true'
         env:
