@@ -1,6 +1,7 @@
 {
   "name": "react-calendar-graph",
-  "version": "0.0.10",
+  "version": "0.0.11",
+  "packageManager": "pnpm@8.4.0",
   "private": false,
   "type": "module",
   "description": "A calendar graph react-component inspired by github's contribution graph",
